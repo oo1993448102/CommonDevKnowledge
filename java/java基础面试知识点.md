@@ -147,19 +147,20 @@
     		i = Integer.valueOf(str);
 	}
 ```
-	Integer --> String
+Integer --> String
+
+
+ ```java
+Integer a = 2;
+String str = Integer.toString(a)
+```	
 	
-	* ```java
-	Integer a = 2;
-	String str = Integer.toString(a)
-	```	
+```java
+Integer a = 2;
+String str = a.toString();
+```
 	
-	* ```java
-	Integer a = 2;
-	String str = a.toString();
-	```
-	
-	* ```java
-	Integer a = 2;
-	String str = String.valueOf(a);
-	```
+```java
+Integer a = 2;
+String str = String.valueOf(a);
+```
