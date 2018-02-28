@@ -76,6 +76,7 @@
 * **两个Activity 之间跳转时必然会执行的是哪几个方法？**
 	</br>A跳转B：A的onPause()  若A不可见 onStop()
 </br>	 B的onCreate(),onStart(),onResume()
+<<<<<<< HEAD
 
 * **前台切换到后台，然后再回到前台，Activity生命周期回调方法。弹出Dialog，生命值周期回调方法**
 	 </br> 按Home：onPause() onStop()
@@ -114,3 +115,6 @@
 * **Fragment之间传递数据的方式？**
 
 	
+=======
+	
+>>>>>>> 2949500e8bb52fe5d07720daaf2b586e964b2546
