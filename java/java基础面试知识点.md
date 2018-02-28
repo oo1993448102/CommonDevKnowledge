@@ -139,6 +139,31 @@
 	
 * **String 转换成 Integer的方式及原理**
 	
+	String --> Integer
+```java
+	String str = "...";
+	Integer i = null;
+	if(str!=null){
+     i = Integer.valueOf(str);
+	}
+```
+	
+	Integer --> String
+	
+	* ```	java
+	Integer a = 2;
+	String str = Integer.toString(a)
+```	
+	
+	* ```java
+	Integer a = 2;
+	String str = a.toString();
+```
+	
+	* ```java
+	Integer a = 2;
+	String str = String.valueOf(a);
+```
 
 
 
