@@ -144,28 +144,22 @@
 	String str = "...";
 	Integer i = null;
 	if(str!=null){
-     i = Integer.valueOf(str);
+    		i = Integer.valueOf(str);
 	}
 ```
-	
 	Integer --> String
 	
-	* ```	java
+	* ```java
 	Integer a = 2;
 	String str = Integer.toString(a)
-```	
+	```	
 	
 	* ```java
 	Integer a = 2;
 	String str = a.toString();
-```
+	```
 	
 	* ```java
 	Integer a = 2;
 	String str = String.valueOf(a);
-```
-
-
-
-	
-	
+	```
