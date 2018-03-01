@@ -65,8 +65,8 @@
 	2．设置 Activity android:configChanges="orientation|keyboardHidden|screenSize"时，切 屏不会重新调用各个生命周期，只会执行 `onConfigurationChanged` 方法。直接设置屏幕方向可以免去这个问题。
 
 * **Activity与Fragment之间生命周期比较**
-	<center>![](https://upload-images.jianshu.io/upload_images/2244681-1532340d63d59dc6.png)</center>
-	<center>![](https://upload-images.jianshu.io/upload_images/2244681-3685a0866eb07d3a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/317)</center>
+	![](https://upload-images.jianshu.io/upload_images/2244681-1532340d63d59dc6.png)
+	![](https://upload-images.jianshu.io/upload_images/2244681-3685a0866eb07d3a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/317)
 	
 * **Activity上有Dialog的时候按Home键时的生命周期**
  </br> 按Home：onPause() onStop()
@@ -102,10 +102,10 @@
 	* 启动另一个activity，返回时如果因为被系统杀死需要重建, 则会从onCreate()重新开始生命周期, 调用onRestoreInstanceState()
 	* 按Home键的情形和启动另一个activity一样，用户再次点击应用图标返回时, **如果重建发生**, 则会调用onCreate()和onRestoreInstanceState()
 	
-	屏幕旋转：
+	屏幕旋转：</br>
 	![](https://ws4.sinaimg.cn/large/006tNc79ly1fowagm8kr0j30h603kaah.jpg)
 	![](https://ws4.sinaimg.cn/large/006tNc79ly1fowagmto6oj30fk040t9a.jpg)
-	Home：
+	</br>Home：
 	![](https://ws2.sinaimg.cn/large/006tNc79ly1fowagne86jj30fm058750.jpg)
 	
 * **Fragment各种情况下的生命周期**
