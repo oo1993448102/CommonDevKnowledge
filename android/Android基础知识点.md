@@ -64,7 +64,7 @@
 
 	2．设置 Activity android:configChanges="orientation|keyboardHidden|screenSize"时，切 屏不会重新调用各个生命周期，只会执行 `onConfigurationChanged` 方法。直接设置屏幕方向可以免去这个问题。
 
-* **Activity与Fragment之间生命周期比较**
+* **Activity与Fragment之间生命周期比较**</br>
 	![](https://upload-images.jianshu.io/upload_images/2244681-1532340d63d59dc6.png)
 	![](https://upload-images.jianshu.io/upload_images/2244681-3685a0866eb07d3a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/317)
 	
@@ -113,5 +113,102 @@
 	</br>viewpager: `setUserVisibleHint()`
 
 * **Fragment之间传递数据的方式？**
+	* 拿到fragment对象，直接传参
+	* 接口回调
+	* 事件分发
+	* ......
+	
+* **Activity 怎么和Service 绑定？**
+	</br>bindService 方法启动服务, 其它组件可以通过回调获取服务的代理对象和服务交互, 而这两方也进行了绑定, 当启动方销毁时, 服务也会自动进行 unBind 操作, 当发现所有绑定都进行了 unBind 时才会销毁服务. 
+
+* **怎么在Activity中启动自己对应的Service？**
+	</br>在 Activity 中可以通过 startService 和 bindService 方法启动 Service。
+
+* **service和activity怎么进行数据交互？**
+	* bindService 通过Binder得到Service对象
+	* 广播
+	* ......
+	
+* **Service的开启方式**
+	</br>startService && bindService
+
+* **请描述一下Service 的生命周期**
+	    ![](https://ws1.sinaimg.cn/large/006tNc79gy1fow5qlw0owj317w05g755.jpg)
+	    
+* **谈谈你对ContentProvider的理解**
+	</br>ContentProvider一般为存储和获取数据提供统一的接口，提供了对底层数据存储方式的抽象,可以在不同的应用程序之间共享数据。
+	
+* **说说ContentProvider、ContentResolver、ContentObserver 之间的关系**
+	* ContentProvider:应用提供	 
+	* ContentResolver:统一管理与不同ContentProvider间的操作，通过统一ContentResolver访问不同ContentProvider
+	* ContentObserver 内容监听器, 可以监听数据的改变状态
+
+* **请描述一下广播BroadcastReceiver的理解**
+* **广播的分类**
+	</br>广播接受器，通过action进行匹配，任意一个action匹配则成功。一个广播接收器可以接收多个广播发出者发出的广播，一个广播发出者也可以得到多个广播接收器的回应。
+	</br>动态注册，多次注册同一个广播只有一个实例，必须显示unregister
+	</br>静态注册，onReceive后会自己注销，所以每次接收时自动生成一个新的实例
+	</br>广播底层由Binder实现
+	
+* **广播使用的方式和场景**
+	</br>广播的发送者和接收者事先是不需要知道对方的存在的，这样带来的好处便是，系统的各个组件可以松耦合地组织在一起
+	</br>监听系统广播 （区别EventBus）
+	</br>进程间通信 （区别EventBus）
+
+* **本地广播和全局广播有什么差别？**
+	</br>Broadcast是针对应用间、应用与系统间、应用内部进行通信的一种方式 广播底层Binder
+	</br>LocalBroadcast比较轻量,由handler实现，仅在自己的应用内发送接收广播，也就是只有自己的应用能收到，数据更加安全广播只在这个程序里，而且效率更高。
+
+* **BroadcastReceiver，LocalBroadcastReceiver 区别**
+	</br>LocalBroadcastReceiver不能静态注册，只能采用动态注册的方式。
+在发送和注册的时候采用，LocalBroadcastManager的sendBroadcast方法和registerReceiver方法
+
+* **AlertDialog,popupWindow,DialogFragment区别**
+	</br>AlertDialog是非阻塞线程的，Popupwindow是阻塞线程的。
+	</br> DialogFragment fragmentManager会自动管理DialogFragment的生命周期．
+
+* **Application 和 Activity 的 Context 对象的区别**
+	</br>生命周期长短，使用Activity的Context持有某些静态引用会引起内存泄漏
+	
+	![](https://ws2.sinaimg.cn/large/006tNc79gy1foxdamsdegj30xs0i8grk.jpg)
+
+数字1：启动Activity在这些类中是可以的，但是需要创建一个新的task。一般情况不推荐。
+
+数字2：在这些类中去layout inflate是合法的，但是会使用系统默认的主题样式，如果你自定义了某些样式可能不会被使用。
+
+数字3：在receiver为null时允许，在4.2或以上的版本中，用于获取黏性广播的当前值。（可以无视）
+
+* **Android属性动画特性**
+</br>与视图动画相对，3.0 API11后出现，可用于任何对象上，在改变视图的同时改变属性，为了兼容可使用开源库
+	
+	**ValueAnimator**
+	</br>**ObjectAnimator**
+	
+* **如何导入外部数据库?**
+	[http://blog.csdn.net/jing__jie/article/details/51602587](http://blog.csdn.net/jing__jie/article/details/51602587)
+	
+* **LinearLayout、RelativeLayout、FrameLayout的特性及对比，并介绍使用场景**
+	* FrameLayout: 没有过多的测量 所有子view默认排放左上角
+	* LinearLayout:线性布局，支持weight，会测量两次
+	* RelativeLayout：相对布局
+	</br>没有嵌套的情况下，LinearLayout，FrameLayout性能优于RelativeLayout，RelativeLayout的功能比较复杂，它的布局过程需要花费更多的CPU时间
+	
+	**布局调优工具**
+		
+	* hierarchy viewer
+	* lint
+	* Android Device Monitor （左上方截图功能的右边，dump）
+	
+* **谈谈对接口与回调的理解**
+	</br>可以用于实现观察者模式、事件监听
+
+* **介绍下SurfaceView**
+	
+	1 . View适用于主动更新的情况，而SurfaceView则适用于被动更新的情况，比如频繁刷新界面。
+
+	2 . View在主线程中对页面进行刷新，而SurfaceView则开启一个子线程来对页面进行刷新。
+
+	3 . View在绘图时没有实现双缓冲机制，SurfaceView在底层机制中就实现了双缓冲机制。（双缓冲技术是游戏开发中的一个重要的技术。当一个动画争先显示时，程序又在改变它，前面还没有显示完，程序又请求重新绘制，这样屏幕就会不停地闪烁。而双缓冲技术是把要处理的图片在内存中处理好之后，再将其显示在屏幕上。双缓冲主要是为了解决 反复局部刷屏带来的闪烁。把要画的东西先画到一个内存区域里，然后整体的一次性画出来。）
+	[SurfaceView 详解](https://www.jianshu.com/p/b037249e6d31)
 
 
