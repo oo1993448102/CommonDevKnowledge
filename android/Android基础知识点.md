@@ -76,7 +76,7 @@
 * **两个Activity 之间跳转时必然会执行的是哪几个方法？**
 	</br>A跳转B：A的onPause()  若A不可见 onStop()
 </br>	 B的onCreate(),onStart(),onResume()
-<<<<<<< HEAD
+
 
 * **前台切换到后台，然后再回到前台，Activity生命周期回调方法。弹出Dialog，生命值周期回调方法**
 	 </br> 按Home：onPause() onStop()
@@ -190,7 +190,7 @@
 * **LinearLayout、RelativeLayout、FrameLayout的特性及对比，并介绍使用场景**
 	* FrameLayout: 没有过多的测量 所有子view默认排放左上角
 	* LinearLayout:线性布局，支持weight，会测量两次
-	* RelativeLayout：相对布局
+	* RelativeLayout：相对布局，两次测量
 	</br>没有嵌套的情况下，LinearLayout，FrameLayout性能优于RelativeLayout，RelativeLayout的功能比较复杂，它的布局过程需要花费更多的CPU时间
 	
 	**布局调优工具**
@@ -210,5 +210,23 @@
 
 	3 . View在绘图时没有实现双缓冲机制，SurfaceView在底层机制中就实现了双缓冲机制。（双缓冲技术是游戏开发中的一个重要的技术。当一个动画争先显示时，程序又在改变它，前面还没有显示完，程序又请求重新绘制，这样屏幕就会不停地闪烁。而双缓冲技术是把要处理的图片在内存中处理好之后，再将其显示在屏幕上。双缓冲主要是为了解决 反复局部刷屏带来的闪烁。把要画的东西先画到一个内存区域里，然后整体的一次性画出来。）
 	[SurfaceView 详解](https://www.jianshu.com/p/b037249e6d31)
+
+* **RecyclerView的使用**
+	</br>略
+	
+* **序列化的作用，以及Android两种序列化的区别**
+	</br>序列化：对象 --> 字节流	反序列化：字节流-->对象
+	* **Serializable** Java 序列化接口 IO读写存储在硬盘上 利于数据持久化
+	*  **Parcelable** Android 序列化接口 效率高 在内存中读写 使用麻烦 （AS有相关插件 一键生成所需方法）
+![](https://ws2.sinaimg.cn/large/006tKfTcgy1fodg2vz29sj30lw0fkwfp.jpg)
+
+* **差值器（TimeInterpolator） 估值器(TypeEvaluator)** 
+	</br>属性动画中使用 用于实现非线性动画
+	</br> TimeInterpolator:根据时间流逝的百分比计算出当前属性值改变的百分比。
+	</br> TypeEvaluator:根据当前属性改变的百分比来计算改变后的属性值。
+	</br>具体可参考[扔物线](http://hencoder.com/ui-1-6/)的教程
+
+* **Android中数据存储方式**
+	</br>SOLite SharedPreferences
 
 
