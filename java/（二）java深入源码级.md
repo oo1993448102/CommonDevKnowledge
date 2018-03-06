@@ -37,7 +37,7 @@
 	
 * **静态代理和动态代理的区别，什么场景使用？（Proxy）**
 
-	静态：由程序员创建或工具生成代理类的源码，再编译代理类。所谓静态也就是在程序运行前就已经存在代理类的字节码文件，代理类和委托类的关系在运行前就确定了。
+	静态：由程序员创建或工具生成代理类的源码，再编译代理类。所谓静态也就是在程序运行前就已经存在代理类的字节码文件，代理类和委托类的关系在运行前就确定了。装饰器模式。
 	</br>优点：业务类只需要关注业务逻辑本身，保证了业务类的重用性。这是代理的共有优点。 
 </br>缺点： 
 1）代理对象的一个接口只服务于一种类型的对象，如果要代理的方法很多，势必要为每一种方法都进行代理，静态代理在程序规模稍大时就无法胜任了。</br> 
@@ -55,13 +55,59 @@
 	c. 以调用处理器类型为参数，利用反射机制得到动态代理类的构造函数 </br>
 	d. 以调用处理器对象为参数，利用动态代理类的构造函数创建动态代理类对象</br> 
 	
-	动态代理机制的好处：
-1、减少编程的工作量：假如需要实现多种代理处理逻辑，只要写多个代理处理器就可以了，无需每种方式都写一个代理类。 2、系统扩展性和维护性增强，程序修改起来也方便多了(一般只要改代理处理器类就行了)。
+	动态代理优点 ：
+1.动态代理类的字节码在程序运行时由Java反射机制动态生成，无需程序员手工编写它的源代码。 
+2.动态代理类不仅简化了编程工作，而且提高了软件系统的可扩展性，因为Java 反射机制可以生成任意类型的动态代理类。
 
-	缺点：
-代理类和委托类需要都实现同一个接口。也就是说只有实现了某个接口的类可以使用Java动态代理机制。但是，事实上使用中并不是遇到的所有类都会给你实现一个接口。因此，对于没有实现接口的类，目前无法使用该机制。(CGLIB)	
+	```
+public class MyInvocationHandler implements InvocationHandler {
+    private String TAG = "MyInvocationHandler";
+    private Object obj;
+
+    public Object bind(Object obj){
+        this.obj = obj;
+        return Proxy.newProxyInstance(obj.getClass().getClassLoader(),obj.getClass().getInterfaces(),this);
+    }
+    
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Log.d(TAG,"start"+method.getName());
+        Object result = method.invoke(obj,args);
+        Log.d(TAG,"end"+method.getName());
+        return result;
+    }
+}
+	```
+	
+	```
+	 Human human = new HumanImp();
+        ((TextView)findViewById(R.id.tv_content)).setText(((Human)new MyInvocationHandler().bind(human)).eat());
+    ```
+	
+	缺点： 
+	JDK的动态代理机制只能代理实现了接口的类，而不能实现接口的类就不能实现JDK的动态代理，cglib是针对类来实现代理的，他的原理是对指定的目标类生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。	
 
 	作用：1，方法增强，让你可以在不修改源码的情况下，增强一些方法，比如添加日志等。
 2.以用作远程调用，好多rpc框架就是用代理方式实现的。
+
+	[参考文章](http://blog.csdn.net/fengyuzhengfan/article/details/49586277)
+	
+* **Java的异常体系**
+
+	![](https://ws3.sinaimg.cn/large/006tNc79gy1fp31ljunraj30na0dudlm.jpg)
+
+   Error是程序无法处理的错误，比如OutOfMemoryError、ThreadDeath等。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。   
+	Exception是程序本身可以处理的异常，这种异常分两大类运行时异常（不检查异常）和非运行时异常（检查异常，不处理，程序就不能编译通过）。程序中应当尽可能去处理这些异常。
+	
+	try、catch、finally:   
+	 * try、catch、finally三个语句块均不能单独使用，三者可以组成 try...catch...finally、try...catch、 
+    try...finally三种结构，catch语句可以有一个或多个，finally语句最多一个。 
+    * try、catch、finally三个代码块中变量的作用域为代码块内部，分别独立而不能相互访问。 
+    如果要在三个块中都可以访问，则需要将变量定义到这些块的外面。 
+    * 多个catch块时候，只会匹配其中一个异常类并执行catch块代码，而不会再执行别的catch块， 
+    并且匹配catch语句的顺序是由上到下。
+
+	throw:方法体内部
+	</br>throws:方法体外部
 
 
