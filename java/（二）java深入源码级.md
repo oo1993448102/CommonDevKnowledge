@@ -87,10 +87,10 @@ public class MyInvocationHandler implements InvocationHandler {
    缺点： 
 	JDK的动态代理机制只能代理实现了接口的类，而不能实现接口的类就不能实现JDK的动态代理，cglib是针对类来实现代理的，他的原理是对指定的目标类生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。	
 
-	作用：1，方法增强，让你可以在不修改源码的情况下，增强一些方法，比如添加日志等。
+作用：1，方法增强，让你可以在不修改源码的情况下，增强一些方法，比如添加日志等。
 2.以用作远程调用，好多rpc框架就是用代理方式实现的。
 
-	[参考文章](http://blog.csdn.net/fengyuzhengfan/article/details/49586277)
+[参考文章](http://blog.csdn.net/fengyuzhengfan/article/details/49586277)
 	
 * **Java的异常体系**
 
