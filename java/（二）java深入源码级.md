@@ -43,7 +43,7 @@
 1）代理对象的一个接口只服务于一种类型的对象，如果要代理的方法很多，势必要为每一种方法都进行代理，静态代理在程序规模稍大时就无法胜任了。</br> 
 2）如果接口增加一个方法，除了所有实现类需要实现这个方法外，所有代理类也需要实现此方法。增加了代码维护的复杂度。
 
-	动态：
+	动态（通过反射实现）：
 
 	在静态代理模式下，Proxy所做的事情，无非是调用在不同的request时，调用触发realSubject对应的方法；更抽象点看，Proxy所作的事情；在Java中 方法（Method）也是作为一个对象来看待了，动态代理工作的基本模式就是将自己的方法功能的实现交给 InvocationHandler角色，外界对Proxy角色中的每一个方法的调用，Proxy角色都会交给InvocationHandler来处理，而InvocationHandler则调用具体对象角色的方法。
 	
@@ -109,5 +109,106 @@ public class MyInvocationHandler implements InvocationHandler {
 
 	throw:方法体内部
 	</br>throws:方法体外部
+	
+* **谈谈你对解析与分派的认识**
+
+	调用目标在编译器进行编译时就必须确定下来，这类方法的调用称为解析
+	
+	解析调用一定是个静态过程，在编译期间就完全确定，在类加载的解析阶段就会把涉及的符号引用转化为可确定的直接引用，不会延迟到运行期再去完成。而分派调用则可能是静态的也可能是动态的，根据分派依据的宗量数（方法的调用者和方法的参数统称为方法的宗量）又可分为单分派和多分派。两类分派方式两两组合便构成了**静态单分派、静态多分派、动态单分派、动态多分派**四种分派情况。
+
+	* 静态分派</br>
+	所有依赖静态类型来定位方法执行版本的分派动作，都称为静态分派，静态分派的最典型应用就是多态性中的方法重载（方法相同，参数不同）。静态分派发生在编译阶段，因此确定静态分配的动作实际上不是由虚拟机来执行的。
+
+	* 动态分派</br>
+	动态分派与多态性的另一个重要体现——方法覆写（完全相同方法）有着很紧密的关系。向上转型后调用子类覆写的方法便是一个很好地说明动态分派的例子。这种情况很常见，因此这里不再用示例程序进行分析。很显然，在判断执行父类中的方法还是子类中覆盖的方法时，如果用静态类型来判断，那么无论怎么进行向上转型，都只会调用父类中的方法，但实际情况是，根据对父类实例化的子类的不同，调用的是不同子类中覆写的方法。
+很明显，这里是要根据变量的实际类型来分派方法的执行版本的。而实际类型的确定需要在程序运行时才能确定下来，这种在运行期根据实际类型确定方法执行版本的分派过程称为动态分派。
+
+	[参考文章](https://www.jianshu.com/p/1976b01c07d2)
+	
+* **修改对象A的equals方法的签名，那么使用HashMap存放这个对象实例的时候，会调用哪个equals方法？**
+
+	```
+	//HashMap
+	if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+                V oldValue = e.value;
+                e.value = value;
+                e.recordAccess(this);
+                return oldValue;
+            }
+	```
+	
+	调用原方法的
+	
+* **Java中实现多态的机制是什么？**
+
+	继承、重写、向上转型
+	</br>实现多态形式：继承和接口
+	1. 使用父类类型的引用指向子类的对象；
+	2. 该引用只能调用父类中定义的方法和变量；
+	3. 如果子类中重写了父类中的一个方法，那么在调用这个方法的时候，将会调用子类中的这个方法；（动态连接、动态调用）;
+
+* **如何将一个Java对象序列化到文件里？**
+ 
+ 对象实现Serializable，不希望被序列化的属性加transient属性</br>
+ ObjectOutputStream & ObjectInputStream
+ 
+ ```java
+ 	File aFile=new File("e:\\c.txt");
+    Stu a=new Stu(1, "aa", "1");
+    FileOutputStream fileOutputStream=null;
+    try {
+      fileOutputStream = new FileOutputStream(aFile);
+      ObjectOutputStream objectOutputStream=new ObjectOutputStream(fileOutputStream);
+      objectOutputStream.writeObject(a);
+      objectOutputStream.flush();
+      objectOutputStream.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }finally {
+      if(fileOutputStream!=null)
+      {
+        try {
+          fileOutputStream.close();
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }      
+      }
+    }
+    ```
+    
+    ```java
+    FileInputStream fileInputStream=new FileInputStream(aFile);
+	ObjectInputStream objectInputStream=new ObjectInputStream(fileInputStream);
+	Stu s=(Stu)objectInputStream.readObject();
+	System.out.println(s);
+	```
+	
+* **说说你对Java反射的理解**
+	
+	允许当程序运行时改变程序结构或变量类型
+	
+	在 Java 和 Android 开发中，一般情况下下面几种场景会用到反射机制：
+	
+	* 需要访问隐藏属性或者调用方法改变程序原来的逻辑，这个在开发中是很常见的，由于一些原因，系统并没有开放一些接口出来，这个时候利用反射是一个有效的解决办法。
+	* 自定义注解，注解就是在运行时利用反射机制来获取的。
+	* 在开发中动态加载类，比如在 Android 中的动态加载解决65k问题等等，模块化和插件化都离不开反射。
+	
+	[参考文章](https://www.jianshu.com/p/6277c1f9f48d)
+	
+* **说说你对Java注解的理解**
+
+	元注解（给自定义注解使用的注解）
+	
+	@Rentention Rentention
+	@Rentention Rentention用来标记自定义注解的有效范围，他的取值有以下三种：
+
+	RetentionPolicy.SOURCE: 只在源代码中保留 一般都是用来增加代码的理解性或者帮助代码检查之类的，比如我们的Override;
+
+	RetentionPolicy.CLASS: 默认的选择，能把注解保留到编译后的字节码class文件中，仅仅到字节码文件中，运行时是无法得到的；
+
+	RetentionPolicy.RUNTIME: ，注解不仅 能保留到class字节码文件中，还能在运行通过反射获取到，这也是我们最常用的。
 
 
