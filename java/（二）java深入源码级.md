@@ -59,7 +59,7 @@
 1.动态代理类的字节码在程序运行时由Java反射机制动态生成，无需程序员手工编写它的源代码。 
 2.动态代理类不仅简化了编程工作，而且提高了软件系统的可扩展性，因为Java 反射机制可以生成任意类型的动态代理类。
 
-```
+	```
 public class MyInvocationHandler implements InvocationHandler {
     private String TAG = "MyInvocationHandler";
     private Object obj;
@@ -77,20 +77,20 @@ public class MyInvocationHandler implements InvocationHandler {
         return result;
     }
 }
-
+	```
 	
-	Human human = new HumanImp();
+	```
+	 Human human = new HumanImp();
         ((TextView)findViewById(R.id.tv_content)).setText(((Human)new MyInvocationHandler().bind(human)).eat());
-```
-
-
-   缺点： 
+    ```
+	
+	缺点： 
 	JDK的动态代理机制只能代理实现了接口的类，而不能实现接口的类就不能实现JDK的动态代理，cglib是针对类来实现代理的，他的原理是对指定的目标类生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。	
 
-作用：1，方法增强，让你可以在不修改源码的情况下，增强一些方法，比如添加日志等。
+	作用：1，方法增强，让你可以在不修改源码的情况下，增强一些方法，比如添加日志等。
 2.以用作远程调用，好多rpc框架就是用代理方式实现的。
 
-[参考文章](http://blog.csdn.net/fengyuzhengfan/article/details/49586277)
+	[参考文章](http://blog.csdn.net/fengyuzhengfan/article/details/49586277)
 	
 * **Java的异常体系**
 
@@ -209,6 +209,6 @@ public class MyInvocationHandler implements InvocationHandler {
 
 	RetentionPolicy.CLASS: 默认的选择，能把注解保留到编译后的字节码class文件中，仅仅到字节码文件中，运行时是无法得到的；
 
-	RetentionPolicy.RUNTIME: ，注解不仅 能保留到class字节码文件中，还能在运行通过反射获取到，这也是我们最常用的。
+	RetentionPolicy.RUNTIME: 注解不仅能保留到class字节码文件中，还能在运行通过反射获取到，这也是我们最常用的。
 
 
