@@ -151,9 +151,8 @@ public class MyInvocationHandler implements InvocationHandler {
  
  对象实现Serializable，不希望被序列化的属性加transient属性</br>
  ObjectOutputStream & ObjectInputStream
- 
  ```java
- 	File aFile=new File("e:\\c.txt");
+    File aFile=new File("e:\\c.txt");
     Stu a=new Stu(1, "aa", "1");
     FileOutputStream fileOutputStream=null;
     try {
@@ -177,14 +176,14 @@ public class MyInvocationHandler implements InvocationHandler {
         }      
       }
     }
-    ```
+```
     
-    ```java
+```java
     FileInputStream fileInputStream=new FileInputStream(aFile);
 	ObjectInputStream objectInputStream=new ObjectInputStream(fileInputStream);
 	Stu s=(Stu)objectInputStream.readObject();
 	System.out.println(s);
-	```
+```
 	
 * **说说你对Java反射的理解**
 	
