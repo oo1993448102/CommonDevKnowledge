@@ -151,8 +151,9 @@ public class MyInvocationHandler implements InvocationHandler {
  
  对象实现Serializable，不希望被序列化的属性加transient属性</br>
  ObjectOutputStream & ObjectInputStream
+ 
  ```java
-    File aFile=new File("e:\\c.txt");
+ 	File aFile=new File("e:\\c.txt");
     Stu a=new Stu(1, "aa", "1");
     FileOutputStream fileOutputStream=null;
     try {
@@ -176,14 +177,14 @@ public class MyInvocationHandler implements InvocationHandler {
         }      
       }
     }
-```
+    ```
     
-```java
+    ```java
     FileInputStream fileInputStream=new FileInputStream(aFile);
 	ObjectInputStream objectInputStream=new ObjectInputStream(fileInputStream);
 	Stu s=(Stu)objectInputStream.readObject();
 	System.out.println(s);
-```
+	```
 	
 * **说说你对Java反射的理解**
 	
@@ -199,15 +200,54 @@ public class MyInvocationHandler implements InvocationHandler {
 	
 * **说说你对Java注解的理解**
 
+	注解本身不能对代码运行产生影响，但是注解可以作为一个标记，用反射之类的手段获取到这个标记后，就能对标记的内容进行处理。例如在方法参数上加注解，用反射获取到注解后对该注解标记的形式参数注入实际参数。
+
+	自定义注解：
+
+	```
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD})
+	@Documented
+	@Inherited
+	public @interface Bind {
+    	int value() default 1;
+    	boolean canBeNull() default false;
+	}
+	```
+
 	元注解（给自定义注解使用的注解）
 	
-	@Rentention Rentention
+	**@Rentention Rentention</br>**
 	@Rentention Rentention用来标记自定义注解的有效范围，他的取值有以下三种：
 
-	RetentionPolicy.SOURCE: 只在源代码中保留 一般都是用来增加代码的理解性或者帮助代码检查之类的，比如我们的Override;
+	RetentionPolicy.SOURCE: 只在源代码中保留 一般都是用来增加代码的理解性或者帮助代码检查之类的，比如我们的Override;</br>
+	RetentionPolicy.CLASS: 默认的选择，能把注解保留到编译后的字节码class文件中，仅仅到字节码文件中，运行时是无法得到的;</br>
+	RetentionPolicy.RUNTIME:注解不仅能保留到class字节码文件中，还能在运行通过反射获取到，这也是我们最常用的。
+	
+	**@Target</br>**
+	@Target指定Annotation用于修饰哪些程序元素。
+	@Target也包含一个名为”value“的成员变量，该value成员变量类型为ElementType[ ]，ElementType为枚举类型，值有如下几个：
 
-	RetentionPolicy.CLASS: 默认的选择，能把注解保留到编译后的字节码class文件中，仅仅到字节码文件中，运行时是无法得到的；
+	ElementType.TYPE：能修饰类、接口或枚举类型 </br>	ElementType.FIELD：能修饰成员变量</br> ElementType.METHOD：能修饰方法 </br>ElementType.PARAMETER：能修饰参数</br> 	ElementType.CONSTRUCTOR：能修饰构造器</br> 	ElementType.LOCAL_VARIABLE：能修饰局部变量 </br>	ElementType.ANNOTATION_TYPE：能修饰注解 </br>	ElementType.PACKAGE：能修饰包</br>
+	
+	**@Documented**</br>
+	使用了@Documented的可以在javadoc中找到
+	
+	**@Interited**</br>
+	注解里的内容可以被子类继承，比如父类中某个成员使用了上述@Bind(value)，Bind中的value能给子类使用到。
+	
+	Android库中使用注解：
+	编译时动态处理，动态**生成代码**，如Butter Knife、Dagger 2</br>
+	运行时动态处理，获得注解信息，如Retrofit
+	
+* **说说你对依赖注入的理解**
 
-	RetentionPolicy.RUNTIME: 注解不仅能保留到class字节码文件中，还能在运行通过反射获取到，这也是我们最常用的。
+	像这种非自己主动初始化依赖，而通过外部来传入依赖的方式，我们就称为依赖注入。
+
+	依赖注入的实现有多种途径，而在 Java 中，使用注解是最常用的。比如通过ButterKnife、Dagger依赖注入库实现，都是使用注解来实现依赖注入，但它利用 APT(Annotation Process Tool) 在编译时生成辅助类，这些类继承特定父类或实现特定接口，程序在运行时加载这些辅助类，调用相应接口完成依赖生成和注入。
+	
+	[反射、注解与依赖注入总结
+](https://www.jianshu.com/p/24820bf3df5c)
+
 
 
