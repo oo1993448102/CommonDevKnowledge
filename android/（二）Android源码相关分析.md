@@ -8,7 +8,11 @@
   
 * **Requestlayout，onlayout，onDraw，DrawChild区别与联系**
 
-	RequestLayout()方法 ：会导致调用measure()过程 和 layout()过程 。 说明：只是对View树重新布局layout过程包括measure()和layout()过程，不会调用draw()过程，但不会重新绘制 任何视图包括该调用者本身。
+	RequestLayout()方法 ：责任链模式</br>
+	子View调用requestLayout方法，会标记当前View及父容器，同时逐层向上提交，直到ViewRootImpl处理该事件，ViewRootImpl会调用三大流程，从measure开始，对于每一个含有标记位的view及其子View都会进行测量、布局、绘制。</br>
+	requestLayout如果没有改变l,t,r,b，那就不会触发onDraw；但是如果这次刷新是在动画里，mDirty非空，就会导致onDraw。
+	
+	invalidate() 只执行自身draw方法
 
 	onLayout()方法(如果该View是ViewGroup对象，需要实现该方法，对每个子视图进行布局)
 
@@ -16,7 +20,10 @@
 
 	drawChild()去重新回调每个子视图的draw()方法
 	
-	invalidate() 层层上传到父级直到传递到ViewRootImpl后触发了scheduleTraversals方法，然后整个View树开始重新按照View绘制流程进行重绘任务。
+	![调用](http://upload-images.jianshu.io/upload_images/1734948-b4493f7b0234dd69.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+	
+	
+	
 	
 * **invalidate和postInvalidate的区别及使用**
 
@@ -102,9 +109,9 @@
 	
 * **ActivityThread，AMS，WMS的工作原理**
 
-	AMS和WMS都属于Android中的系统服务
+	AMS和WMS都属于Android中的系统服务，被所有的App公用的
 
-	AMS(ActivityManagerServices)统一调度所有应用程序的Activity</br>
+	AMS(ActivityManagerServices)统一调度所有应用程序的Activity，负责系统中所有Activity的生命周期。</br>
 	WMS(WindowManagerService)控制所有Window的显示与隐藏以及要显示的位置
 	
 	[Android系统服务 —— WMS与AMS](https://www.jianshu.com/p/47eca41428d6)
@@ -119,7 +126,17 @@
 	引入android的百分比布局。</br>
 	切图的时候切大分辨率的图，应用到布局当中。在小分辨率的手机上也会有很好的显示效果。</br>
 	
+* **自定义View的事件**
+
+	触摸&&绘制
+
 * **AsyncTask+HttpClient 与 AsyncHttpClient有什么区别？**
+
+* **LaunchMode应用场景**	
+
+	sinngleTop:防抖</br>
+	singleTask:入口Activity</br>
+	singleInstance:单实例，多应用公用，不常见
 
 * **AsyncTask 如何使用?**
 
@@ -134,6 +151,89 @@
 	* AsyncTask对象的execute方法必须在主线程中调用 </br>
 	* 一个AsyncTask对象只能调用一次execute方法
 
+* **SparseArray原理**
+
+	当使用HashMap(K, V),如果K为整数类型时,使用SparseArray的效率更高</br>
+
+```
+	mKeys = new int[initialCapacity];
+	mValues = new Object[initialCapacity];
+```	
+
+key value 分别为一个数组 key是有序插入的</br>
+	查找key时使用二分查找法，降低了时间复杂度（O（log2n）），根据找到的key的下标取value
+
+* **请介绍下ContentProvider 是如何实现数据共享的？**
+
+	统一了数据访问方式
+	
+* **Android Service与Activity之间通信的几种方式**
+
+	* bindService 通过Binder得到Service对象
+	* 广播
+	* ......
+
+* **IntentService原理及作用是什么？**
+
+	IntentService保留了Service原有的特性，并且将耗时的操作都放在的子线程中，通过Handler的回调方式实现了数据的返回。
+
+	* IntentService继承Service，专门处理异步请求。
+	* 客户端通过调用startService(Intent)发起请求，自然数据是通过Intent进行传递的。
+	* 一旦Service启动后，对于Intent所传递的数据操作都通过工作线程（worker thread）进行处理。
+	* 在完成数据的处理之后，Handler会回调其处理结果。在任务结束后会将自身服务关闭。
+
+	通过Handler、Message、Looper在Service中实现的异步线程消息处理的机制。但是由于是通过衍生Service的方式实现的，因此具有Service的生命周期特性。
+	
+* **说说Activity、Intent、Service 是什么关系**
+
+	Activity Service 四大组件，通过Intent传递消息
+
+* **ApplicationContext和ActivityContext的区别**
+	
+	生命周期长短，使用Activity的Context持有某些静态引用会引起内存泄漏
+	
+	![](https://ws2.sinaimg.cn/large/006tNc79gy1foxdamsdegj30xs0i8grk.jpg)
+	
+	和UI相关的方法基本都不建议或者不可使用Application
+
+	数字1：启动Activity在这些类中是可以的，但是需要创建一个新的task。一般情况不推荐。
+
+	数字2：在这些类中去layout inflate是合法的，但是会使用系统默认的主题样式，如果你自定义了某些样式可能不会被使用。
+
+	数字3：在receiver为null时允许，在4.2或以上的版本中，用于获取黏性广播的当前值。（可以无视）
+
+	Context数量 = Activity数量 + Service数量 + 1
+
+* **SP是进程同步的吗?有什么方法做到同步？**
+
+	不是</br>
+	使用 contentprovider
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+
+
+
 * **如何取消AsyncTask？**
 
 	cancel方法 --> isCancelled()为true --> 在doInBackground中手动检查决定是否继续运行
@@ -145,4 +245,24 @@
 * **为什么不能在子线程更新UI？**
 
 	Exception:Only the original thread that created a view hierarchy can touch its views
+
+```
+	void checkThread() {
+        if (mThread != Thread.currentThread()) {
+            throw new CalledFromWrongThreadException(
+                    "Only the original thread that created a view hierarchy can touch its views.");
+        }
+    }
+```	
+在Activity创建完成后（Activity的onResume之前ViewRootImpl实例没有建立），mThread被赋值为主线程（ViewRootImpl），所以直接在onCreate中创建子线程是可以更新UI的	
+
+在子线程中添加 Window，并且创建 ViewRootImpl，可以在子线程中更新view
+
+设计思考：</br>
+	Android 的单线程模型，因为如果支持多线程修改 View 的话，由此产生的线程同步和线程安全问题将是非常繁琐的，所以 Android 直接就定死了，View 的操作必须在创建它的 UI 线程，从而简化了系统设计。 
+　　有没有可以在其他非原始线程更新 ui 的情况呢？有，SurfaceView 就可以在其他线程更新。
+
+[参考文章](https://www.jianshu.com/p/5d1cb4548630)
+
+* **ANR产生的原因是什么？**			
 	
