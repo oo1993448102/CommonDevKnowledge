@@ -208,7 +208,75 @@ key value 分别为一个数组 key是有序插入的</br>
 
 	不是</br>
 	使用 contentprovider
+	
+* **谈谈多线程在Android中的使用**
 
+	避免ANR(UI线程5s 广播10s 服务20s)</br>
+	防止耗时操作拥堵线程  完成持续性长的耗时操作</br>
+	
+	thread && runnable:</br>直接继承Thread和实现Runnable接口实现多线程区别
+众所周知在Java中类仅支持单继承，当定义一个新的类的时候，它只能扩展一个外部类。假如创建自定义线程类的时候是通过扩展 Thread类的方法来实现的，那么这个自定义类就不能再去扩展其他的类。因此，如果自定义类必须扩展其他的类，那么就可以使用实现Runnable接口的方法来定义该类为线程类，这样就可以避免Java单继承所带来的局限性。但继承Thread和实现Runnable重要区别并不是在于此，更重要的是实现Runnable接口的方式创建的线程可以处理同一资源，从而实现资源的共享。</br>
+实现Runnable接口相对于扩展Thread类来说，具有无可比拟的优势。此方式不仅有助于程序的健壮性，使代码能够被多个线程共享，而且代码和数据资源相对独立，从而特别适合多个具有相同代码的线程去处理同一资源的情况。使得线程、代码和数据资源三者有效分离，很好地体现了面向对象程序设计的思想。因此，几乎所有的多线程程序都是通过实现Runnable接口的方式来完成的。
+	
+	asynctask
+	
+	intentservice
+	
+* **进程和 Application 的生命周期**
+
+	进程重要级：前台（foreground）>可视（visible）>服务(service)>背景（background）>空（cache）
+	
+	application生命周期：
+
+```
+	public class App extends Application {
+
+    @Override
+    public void onCreate() {
+        // 程序创建的时候执行
+        Log.d(TAG, "onCreate");
+        super.onCreate();
+    }
+    @Override
+    public void onTerminate() {
+        // 程序终止的时候执行
+        Log.d(TAG, "onTerminate");
+        super.onTerminate();
+    }
+    @Override
+    public void onLowMemory() {
+        // 低内存的时候执行
+        Log.d(TAG, "onLowMemory");
+        super.onLowMemory();
+    }
+    @Override
+    public void onTrimMemory(int level) {
+        // 程序在内存清理的时候执行
+        Log.d(TAG, "onTrimMemory");
+        super.onTrimMemory(level);
+    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        Log.d(TAG, "onConfigurationChanged");
+        super.onConfigurationChanged(newConfig);
+    }
+    
+}
+```
+
+* **封装View的时候怎么知道view的大小**
+	
+	调用view宽高时期view.getMeasuredWidth/Height（确保view已经测量完毕）：
+	
+	* `Activity/View#onWindowFocusChanged` 它会被调用多次，当 Activity的窗口得到焦点和失去焦点均会被调用
+	* `view.post(runnable)` 通过post将一个runnable投递到消息队列的尾部，当Looper调用此 runnable的时候，View也初始化好了。
+	* `ViewTreeObserver.addOnGlobalLayoutListener`
+
+* **RecyclerView原理**
+
+	[RecyclerView 剖析](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2016/0630/4400.html)
+	
+	[RecyclerView 剖析 下](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2016/0701/4401.html)* **AndroidManifest的作用与理解**
 
 
 
