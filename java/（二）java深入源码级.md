@@ -251,5 +251,28 @@ public class MyInvocationHandler implements InvocationHandler {
 	[反射、注解与依赖注入总结
 ](https://www.jianshu.com/p/24820bf3df5c)
 
+* **说一下泛型原理，并举例说明**
 
+	实现原理：类型擦除 先检查，再编译</br>
+	出现原因：解决类型转换问题</br>
+	java 伪泛型，编译期间会擦除泛型，只留原始类型，生成的Java字节码中是不包含泛型中的类型信息，所以可以通过反射添加原始泛型不允许的参数</br>
+	若无限定用Object替换，若有限定用第一个边界的类型变量来替换。
+	
+	[参考文章](http://blog.csdn.net/wisgood/article/details/11762427)
+	
+* **Java中String的了解**
+
+	final类，不可继承。
+
+	String对象一旦被创建就是固定不变的了，对String对象的任何改变都不影响到原对象，相关的任何change操作都会生成新的对象。
+	
+	优化：字符串常量池，已存在直接返回，故常量池中一定不存在两个相同的字符串。
+	
+* **String为什么要设计成不可变的？**
+
+	设计考虑,效率优化问题,以及安全性这三大方面
+	
+* **Object类的equal和hashCode方法重写，为什么？**
+
+	两个Object equals时，其hashcode必相等
 
