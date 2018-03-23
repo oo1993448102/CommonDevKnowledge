@@ -16,3 +16,5 @@
 
 [Android源码相关解析](https://github.com/oo1993448102/CommonDevKnowledge/blob/master/android/%EF%BC%88%E4%BA%8C%EF%BC%89Android%E6%BA%90%E7%A0%81%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90.md)
 
+[Android常见原理性问题](https://github.com/oo1993448102/CommonDevKnowledge/blob/master/android/%EF%BC%88%E4%B8%89%EF%BC%89%E5%B8%B8%E8%A7%81%E7%9A%84%E4%B8%80%E4%BA%9B%E5%8E%9F%E7%90%86%E6%80%A7%E9%97%AE%E9%A2%98.md)
+
